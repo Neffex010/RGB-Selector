@@ -94,6 +94,7 @@ const I18N = {
     copied: '¡Copiado!',
     copyAll: 'Copiar todo',
     copyHex: 'Copiar HEX',
+    nativePicker: 'Selector de color del navegador',
     copyRgb: 'Copiar RGB',
     copyHsl: 'Copiar HSL',
     copyCmyk: 'Copiar CMYK',
@@ -141,6 +142,7 @@ const I18N = {
     copied: 'Copied!',
     copyAll: 'Copy all',
     copyHex: 'Copy HEX',
+    nativePicker: 'Browser color picker',
     copyRgb: 'Copy RGB',
     copyHsl: 'Copy HSL',
     copyCmyk: 'Copy CMYK',
@@ -268,6 +270,9 @@ function refresh() {
   els.redValue.textContent = r;
   els.greenValue.textContent = g;
   els.blueValue.textContent = b;
+  els.redSlider.style.setProperty('--fill', `${(r / 255) * 100}%`);
+  els.greenSlider.style.setProperty('--fill', `${(g / 255) * 100}%`);
+  els.blueSlider.style.setProperty('--fill', `${(b / 255) * 100}%`);
 
   // Formato
   els.hexInput.value = hex;
