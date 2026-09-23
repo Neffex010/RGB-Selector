@@ -1,156 +1,220 @@
 <!DOCTYPE html>
 <html lang="es">
-  <!-- Nueva Version-->
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Professional RGB Color Picker</title>
+  <title>Color Picker Profesional · RGB · HEX · HSL · CMYK</title>
+
+  <!-- SEO -->
+  <meta name="description" content="Color picker profesional con selector visual, armonías de color, contraste WCAG, export a CSS/PNG y guardado local. Convierte entre RGB, HEX, HSL y CMYK.">
+  <meta name="author" content="Neffe">
+  <meta property="og:title" content="Color Picker Profesional">
+  <meta property="og:description" content="Selector de color visual con armonías, contraste WCAG, export a CSS/PNG y más.">
+  <meta property="og:type" content="website">
+  <meta name="theme-color" content="#4361ee">
+
+  <!-- Favicon -->
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+
+  <!-- Fuentes -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- Icons + Bootstrap grid -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="container py-4">
-    <div class="glass-card">
-      <div class="app-header">
-        <h1 class="app-title"><i class="bi bi-palette-fill"></i> Professional Color Picker</h1>
+    <header class="app-header glass-card">
+      <div class="header-top">
+        <div>
+          <h1 class="app-title"><i class="bi bi-palette-fill"></i> <span data-i18n="title">Color Picker Profesional</span></h1>
+          <p class="app-tagline" data-i18n="tagline">Diseña, combina y exporta tu paleta de colores</p>
+        </div>
+        <div class="header-actions">
+          <button class="btn-ghost" id="lang-toggle" aria-label="Language">EN</button>
+          <button class="btn-ghost" id="share-btn" title="Compartir" aria-label="Compartir">
+            <i class="bi bi-link-45deg"></i>
+          </button>
+        </div>
       </div>
-      
-      <div class="app-content">
-        <!-- Color Display -->
+    </header>
+
+    <main class="layout">
+      <!-- ======= Columna editor ======= -->
+      <section class="editor glass-card" aria-label="Editor de color">
+        <!-- Vista previa -->
         <div class="color-display" id="color-display">
           <div class="contrast-text" id="contrast-text">Texto de ejemplo</div>
           <div class="color-info">
-            <p class="color-value" id="full-color-value">RGB(128, 128, 128) - #808080</p>
-            <button class="btn btn-sm btn-outline-light" id="copy-all-btn">
-              <i class="bi bi-clipboard"></i> Copiar
+            <div>
+              <p class="color-value" id="full-color-value">RGB(128, 128, 128) · #808080</p>
+              <p class="contrast-info" id="contrast-info"></p>
+            </div>
+            <button class="btn-ghost btn-ghost--light" id="copy-all-btn" data-i18n-title="copyAll" aria-label="Copiar todo">
+              <i class="bi bi-clipboard"></i>
             </button>
           </div>
         </div>
-        
-        <!-- Control Panel -->
+
+        <!-- Selector visual (SV canvas + matiz) -->
         <div class="control-panel">
-          <!-- Red Channel -->
+          <h2 class="panel-title"><i class="bi bi-droplet-half"></i> <span data-i18n="picker">Selector visual</span></h2>
+          <div class="sv-wrap" id="sv-wrap">
+            <canvas id="sv-picker" aria-label="Selector de saturación y valor"></canvas>
+            <div class="sv-marker" id="sv-marker" aria-hidden="true"></div>
+          </div>
+          <div class="hue-row">
+            <label class="hue-label" for="hue-slider"><span data-i18n="hue">Matiz</span></label>
+            <input type="range" class="hue-slider" id="hue-slider" min="0" max="360" value="0" aria-label="Matiz">
+            <span class="hue-value" id="hue-value">0°</span>
+          </div>
+        </div>
+
+        <!-- Canales RGB -->
+        <div class="control-panel">
+          <h2 class="panel-title"><i class="bi bi-sliders"></i> <span data-i18n="rgb">RGB</span></h2>
+
           <div class="slider-container">
             <div class="slider-label">
-              <div class="channel-name">
-                <i class="bi bi-circle-fill text-danger"></i>
-                <span>Rojo</span>
-              </div>
+              <span class="channel-name"><i class="bi bi-circle-fill text-danger"></i><span>Rojo</span></span>
               <span class="channel-value" id="red-value">128</span>
             </div>
-            <input type="range" class="slider slider-red" id="red-slider" min="0" max="255" value="128">
-            <div class="input-group mt-2">
-              <span class="input-group-text">0-255</span>
-              <input type="number" class="form-control" id="red-input" min="0" max="255" value="128">
+            <input type="range" class="slider slider-red" id="red-slider" min="0" max="255" value="128" aria-label="Rojo">
+            <div class="input-row">
+              <span class="input-tag">R</span>
+              <input type="number" class="num-input" id="red-input" min="0" max="255" value="128" aria-label="Valor rojo">
             </div>
           </div>
-          
-          <!-- Green Channel -->
+
           <div class="slider-container">
             <div class="slider-label">
-              <div class="channel-name">
-                <i class="bi bi-circle-fill text-success"></i>
-                <span>Verde</span>
-              </div>
+              <span class="channel-name"><i class="bi bi-circle-fill text-success"></i><span>Verde</span></span>
               <span class="channel-value" id="green-value">128</span>
             </div>
-            <input type="range" class="slider slider-green" id="green-slider" min="0" max="255" value="128">
-            <div class="input-group mt-2">
-              <span class="input-group-text">0-255</span>
-              <input type="number" class="form-control" id="green-input" min="0" max="255" value="128">
+            <input type="range" class="slider slider-green" id="green-slider" min="0" max="255" value="128" aria-label="Verde">
+            <div class="input-row">
+              <span class="input-tag">G</span>
+              <input type="number" class="num-input" id="green-input" min="0" max="255" value="128" aria-label="Valor verde">
             </div>
           </div>
-          
-          <!-- Blue Channel -->
+
           <div class="slider-container">
             <div class="slider-label">
-              <div class="channel-name">
-                <i class="bi bi-circle-fill text-primary"></i>
-                <span>Azul</span>
-              </div>
+              <span class="channel-name"><i class="bi bi-circle-fill text-primary"></i><span>Azul</span></span>
               <span class="channel-value" id="blue-value">128</span>
             </div>
-            <input type="range" class="slider slider-blue" id="blue-slider" min="0" max="255" value="128">
-            <div class="input-group mt-2">
-              <span class="input-group-text">0-255</span>
-              <input type="number" class="form-control" id="blue-input" min="0" max="255" value="128">
+            <input type="range" class="slider slider-blue" id="blue-slider" min="0" max="255" value="128" aria-label="Azul">
+            <div class="input-row">
+              <span class="input-tag">B</span>
+              <input type="number" class="num-input" id="blue-input" min="0" max="255" value="128" aria-label="Valor azul">
             </div>
           </div>
         </div>
-        
-        <!-- Action Buttons -->
+
+        <!-- HEX + nativo -->
+        <div class="control-panel">
+          <div class="panel-inline">
+            <label class="panel-title" for="hex-input">HEX</label>
+            <div class="hex-row">
+              <input type="text" class="hex-input" id="hex-input" placeholder="#808080" spellcheck="false" autocomplete="off" aria-label="Valor HEX">
+              <button class="btn-ghost" id="native-color-btn" data-i18n-title="copyHex" aria-label="Selector de color nativo">
+                <i class="bi bi-eyedropper"></i>
+              </button>
+              <input type="color" id="native-color" value="#808080" aria-hidden="true" tabindex="-1">
+            </div>
+          </div>
+        </div>
+
+        <!-- Acciones -->
         <div class="action-buttons">
-          <button class="btn btn-primary" id="save-color-btn">
-            <i class="bi bi-bookmark"></i> Guardar color
+          <button class="btn-action btn-action--primary" id="save-color-btn">
+            <i class="bi bi-bookmark-heart"></i><span data-i18n="save">Guardar color</span>
           </button>
-          <button class="btn btn-outline-light" id="random-color-btn">
-            <i class="bi bi-shuffle"></i> Color aleatorio
+          <button class="btn-action" id="random-color-btn">
+            <i class="bi bi-shuffle"></i><span data-i18n="random">Color aleatorio</span>
+          </button>
+          <button class="btn-action" id="random-palette-btn">
+            <i class="bi bi-dice-5"></i><span data-i18n="randomPalette">Paleta aleatoria</span>
           </button>
         </div>
-        
-        <!-- Color Formats -->
+
+        <!-- Formatos -->
         <div class="color-formats">
           <div class="format-card">
-            <div class="format-title">HEX</div>
+            <span class="format-title">HEX</span>
             <p class="format-value" id="hex-value">#808080</p>
-            <button class="copy-btn" data-format="hex">
-              <i class="bi bi-clipboard"></i>
-            </button>
+            <button class="copy-btn" data-format="hex" data-i18n-title="copyHex" aria-label="Copiar HEX"><i class="bi bi-clipboard"></i></button>
           </div>
           <div class="format-card">
-            <div class="format-title">RGB</div>
+            <span class="format-title">RGB</span>
             <p class="format-value" id="rgb-value">rgb(128, 128, 128)</p>
-            <button class="copy-btn" data-format="rgb">
-              <i class="bi bi-clipboard"></i>
-            </button>
+            <button class="copy-btn" data-format="rgb" data-i18n-title="copyRgb" aria-label="Copiar RGB"><i class="bi bi-clipboard"></i></button>
           </div>
           <div class="format-card">
-            <div class="format-title">HSL</div>
+            <span class="format-title">HSL</span>
             <p class="format-value" id="hsl-value">hsl(0, 0%, 50%)</p>
-            <button class="copy-btn" data-format="hsl">
-              <i class="bi bi-clipboard"></i>
-            </button>
+            <button class="copy-btn" data-format="hsl" data-i18n-title="copyHsl" aria-label="Copiar HSL"><i class="bi bi-clipboard"></i></button>
           </div>
           <div class="format-card">
-            <div class="format-title">CMYK</div>
+            <span class="format-title">CMYK</span>
             <p class="format-value" id="cmyk-value">cmyk(0%, 0%, 0%, 50%)</p>
-            <button class="copy-btn" data-format="cmyk">
-              <i class="bi bi-clipboard"></i>
-            </button>
+            <button class="copy-btn" data-format="cmyk" data-i18n-title="copyCmyk" aria-label="Copiar CMYK"><i class="bi bi-clipboard"></i></button>
           </div>
         </div>
-        
-        <!-- Saved Colors -->
-        <div class="saved-colors">
-          <h3 class="section-title"><i class="bi bi-collection"></i> Colores guardados</h3>
-          <div class="color-palette" id="saved-colors-list">
-            <div class="empty-state" id="empty-state">
-              <i class="bi bi-inbox" style="font-size: 2rem;"></i>
-              <p class="mt-2">No hay colores guardados</p>
-            </div>
+      </section>
+
+      <!-- ======= Columna paletas ======= -->
+      <aside class="sidebar glass-card" aria-label="Paletas y exportación">
+        <!-- Export -->
+        <section class="panel">
+          <h2 class="panel-title"><i class="bi bi-box-arrow-down"></i> <span data-i18n="export">Exportar</span></h2>
+          <div class="export-actions">
+            <button class="btn-action" id="export-css-btn"><i class="bi bi-filetype-css"></i><span data-i18n="exportCss">CSS</span></button>
+            <button class="btn-action" id="export-png-btn"><i class="bi bi-image"></i><span data-i18n="exportPng">PNG</span></button>
           </div>
-        </div>
-      </div>
-    </div>
+        </section>
+
+        <!-- Armonías -->
+        <section class="panel">
+          <h2 class="panel-title"><i class="bi bi-grid-3x3-gap"></i> <span data-i18n="harmonies">Armonías de color</span></h2>
+          <div id="harmony-list"></div>
+        </section>
+
+        <!-- Paleta aleatoria -->
+        <section class="panel" id="random-palette-wrap">
+          <h2 class="panel-title"><i class="bi bi-dice-5"></i> <span data-i18n="randomPalette">Paleta aleatoria</span></h2>
+          <div class="palette-row" id="random-palette-list"></div>
+        </section>
+
+        <!-- Guardados -->
+        <section class="panel">
+          <div class="panel-head">
+            <h2 class="panel-title"><i class="bi bi-collection"></i> <span data-i18n="saved">Colores guardados</span></h2>
+            <button class="btn-ghost btn-ghost--danger" id="clear-saved-btn" style="display:none" data-i18n="clearAll">Limpiar</button>
+          </div>
+          <div class="saved-list" id="saved-colors-list">
+            <div class="empty-state"><i class="bi bi-inbox"></i><p data-i18n="emptySaved">Aún no guardás colores</p></div>
+          </div>
+        </section>
+      </aside>
+    </main>
+
+    <footer class="app-footer">
+      <p>RGB Selector · <span data-i18n="tagline">Diseña, combina y exporta tu paleta de colores</span></p>
+    </footer>
   </div>
 
-  <!-- Toast Notification -->
-  <div class="toast-container">
-    <div id="copy-toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-      <div class="toast-body">
-        <div class="d-flex align-items-center">
-          <i class="bi bi-check-circle-fill text-success me-2"></i>
-          <strong class="me-auto">¡Copiado!</strong>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-        <div class="mt-2">El valor se ha copiado al portapapeles</div>
-      </div>
-    </div>
+  <!-- Toast -->
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <i class="bi bi-check-circle-fill" id="toast-icon"></i>
+    <span id="toast-body">Guardado</span>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="script.js"></script>
+  <script type="module" src="js/main.js"></script>
 </body>
 </html>

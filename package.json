@@ -1,0 +1,15 @@
+{
+  "name": "rgb-selector",
+  "version": "2.0.0",
+  "description": "Color picker profesional con selector visual, armonías de color, contraste WCAG y export a CSS/PNG.",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "keywords": ["color-picker", "rgb", "hex", "hsl", "cmyk", "wcag", "palette"],
+  "license": "MIT",
+  "devDependencies": {
+    "vitest": "^3.2.4"
+  }
+}
